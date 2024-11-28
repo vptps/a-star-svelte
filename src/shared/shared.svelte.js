@@ -1,1 +1,1 @@
-export let shared = $state({ showCoordinates: false });
+export const shared = $state({ showCoordinates: false });
