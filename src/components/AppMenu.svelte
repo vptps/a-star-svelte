@@ -66,8 +66,8 @@
   </div>
 
   <div class="menu-section">
-    <button onclick={startAlgo}>Start algo</button>
-    <button onclick={initGrid}>Reset</button>
+    <button id="start-button" onclick={startAlgo}>Start algo</button>
+    <button id="reset-button" onclick={initGrid}>Reset</button>
   </div>
 </div>
 

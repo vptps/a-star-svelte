@@ -1,0 +1,41 @@
+// ***********************************************
+// This example commands.js shows you how to
+// create various custom commands and overwrite
+// existing commands.
+//
+// For more comprehensive examples of custom
+// commands please read more here:
+// https://on.cypress.io/custom-commands
+// ***********************************************
+//
+//
+// -- This is a parent command --
+// Cypress.Commands.add('login', (email, password) => { ... })
+//
+//
+// -- This is a child command --
+// Cypress.Commands.add('drag', { prevSubject: 'element'}, (subject, options) => { ... })
+//
+//
+// -- This is a dual command --
+// Cypress.Commands.add('dismiss', { prevSubject: 'optional'}, (subject, options) => { ... })
+//
+//
+// -- This will overwrite an existing command --
+// Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+
+Cypress.Commands.add('drawImpossibleSmallLabyrinth', () => {
+  cy.get('input[name="gridSize"]') // type range
+    .invoke('val', 5)
+    .trigger('input')
+    .trigger('change'); 
+
+  // TODO, mettre dans une fonction
+  cy.get('.cell').each((cell, idx) => {
+    if (idx >= 10 && idx <= 14) {
+      cy.wrap(cell).trigger('mousedown') // don't forget to cy.wrap, each returns DOM elements, not cypress objects
+    }
+  })
+  cy.get('.cell').first().trigger('mouseup')
+  // we could also trigger mouseup on the row, but we would need to use { force: true }, because the row has a height: 0
+})
