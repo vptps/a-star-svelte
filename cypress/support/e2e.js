@@ -15,3 +15,12 @@
 
 // Import commands.js using ES2015 syntax:
 import './commands'
+import './custom-assertions'
+
+beforeEach(() => {
+  cy.log('cy.log beforeEach, located in support file')
+})
+
+before(() => {
+  cy.log('cy.log before, located in support file')
+})

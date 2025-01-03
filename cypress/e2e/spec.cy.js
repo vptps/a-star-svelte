@@ -1,18 +1,29 @@
-describe('Test A *', () => {
-  it('Visits aStarSvelte, check default appMenu values and run the a star algo', () => {
+// we can add test config in both describe and it blocks, here ie:exclude edge
+describe('Test A *', { browser: '!edge' }, () => {
+  before(() => {
     cy.visit('localhost:5173')
-
-    cy.contains('Start algo').click()
-
-    cy.get('input[name="gridSize"]').as('gridSize').should('have.value', '20')
-    cy.get('input[name="cellSize"]').as('cellSize').should('have.value', '25')
-    cy.get('input[name="speed"]').as('speed').should('have.value', '5')
+    // we can define aliases in before hook, and use them later
+    cy.get('input[name="gridSize"]').as('gridSize')
+    cy.get('input[name="cellSize"]').as('cellSize')
+    cy.get('input[name="speed"]').as('speed')
     // using "as" we have an alias, we could now use cy.get('@speed')
   })
 
-  it('modifies appMenu inputs and checks that the algo gave a successful result', () => {
+  beforeEach(() => {
+    cy.log('cy.log beforeEach, located in spec file, visiting localhost')
     cy.visit('localhost:5173')
+  })
 
+  it('Visits aStarSvelte, check default appMenu values and run the a star algo', () => {
+    cy.contains('Start algo').click()
+
+    cy.get('@gridSize').should('have.value', '20') // this.gridSize would only work if not using arrow functions
+    cy.get('@cellSize').should('have.value', '25')
+    cy.get('@speed').should('have.value', '5')
+    // aliases are not kept through tests unless set in hooks, see before hook above
+  })
+
+  it('modifies appMenu inputs and checks that the algo gave a successful result', () => {
     cy.get('input[name="speed"]') // type range, can not just .type()
       .invoke('val', 8)
       .trigger('input')
@@ -32,42 +43,24 @@ describe('Test A *', () => {
   })
 
   it('Create an impossible labyrinth with no solution', () => {
-    cy.visit('localhost:5173')
-
     cy.drawImpossibleSmallLabyrinth();
-    // this custom command does that:
-    // cy.get('input[name="gridSize"]') // type range
-    //   .invoke('val', 5)
-    //   .trigger('input')
-    //   .trigger('change'); 
-
-    // // TODO, mettre dans une fonction
-    // cy.get('.cell').each((cell, idx) => {
-    //   if (idx >= 10 && idx <= 14) {
-    //     cy.wrap(cell).trigger('mousedown') // don't forget to cy.wrap, each returns DOM elements, not cypress objects
-    //   }
-    // })
-    // cy.get('.cell').first().trigger('mouseup')
-    // // we could also trigger mouseup on the row, but we would need to use { force: true }, because the row has a height: 0
-
-    cy.wait(500)
     cy.contains('Start algo').click()
     cy.wait(1500) // algo runs
 
-    cy.get('.cell').then(($cells) => {
-      // if purple background was added via a class, we could have
-      // cy.get('.cell.purple').should('not.exist')
-      const hasPurpleBackground = Array.from($cells).some((cell) => {
-        return ('' + window.getComputedStyle(cell).backgroundColor === 'rgb(128, 0, 128)');
-      });
-
-      expect(hasPurpleBackground).to.be.false; // mocha style assertion
-    });
+    cy.get('.cell').should('not.assertSolved');
   });
 
-  it('Create a solvable labyrinth, and solves it', () => {
-    cy.visit('localhost:5173')
+  it('Create a solvable labyrinth, and solves it after a while', () => {
+    // use custom command and fixtures
+    cy.drawSolvableLabyrinth();
+    cy.contains('Start algo').click()
+    cy.wait(1500) // algo runs but is not completed yet
+    cy.get('.cell').should('not.assertSolved'); // custom chai assertion
 
-    
+    cy.wait(8000)
+    cy.get('.cell').should('assertSolved');
   });
+
+  // when adding a new test and writing it, use it.only to onyl play it
+  // also possible to use it.skip to avoid replaying longer tests
 })
