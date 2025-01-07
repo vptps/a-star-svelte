@@ -25,7 +25,7 @@
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
 Cypress.Commands.add('drawImpossibleSmallLabyrinth', () => {
-  cy.get('input[name="gridSize"]') // type range
+  cy.get('input[name="gridSize"]') // type range needs to be handled this way
     .invoke('val', 5)
     .trigger('input')
     .trigger('change'); 
@@ -40,7 +40,7 @@ Cypress.Commands.add('drawImpossibleSmallLabyrinth', () => {
 });
 
 Cypress.Commands.add('drawSolvableLabyrinth', () => {
-  cy.get('input[name="gridSize"]')
+  cy.get('input[name="gridSize"]') // here we can not (and should not anyway) use aliases defined in spec files
     .invoke('val', 20)
     .trigger('input')
     .trigger('change');

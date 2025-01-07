@@ -1,17 +1,19 @@
 // we can add test config in both describe and it blocks, here ie:exclude edge
 describe('Test A *', { browser: '!edge' }, () => {
   before(() => {
-    cy.visit('localhost:5173')
-    // we can define aliases in before hook, and use them later
-    cy.get('input[name="gridSize"]').as('gridSize')
-    cy.get('input[name="cellSize"]').as('cellSize')
-    cy.get('input[name="speed"]').as('speed')
-    // using "as" we have an alias, we could now use cy.get('@speed')
+    // we could visit just once if we disabled testIsolation in describe configuration just above
+    // cy.visit('localhost:5173')
   })
 
   beforeEach(() => {
     cy.log('cy.log beforeEach, located in spec file, visiting localhost')
-    cy.visit('localhost:5173')
+    cy.visit('/')
+    
+    // we can define aliases in beforeEach hook, and use them later
+    cy.get('input[name="gridSize"]').as('gridSize')
+    cy.get('input[name="cellSize"]').as('cellSize')
+    cy.get('input[name="speed"]').as('speed')
+    // using "as" we have an alias, we could now use cy.get('@speed')
   })
 
   it('Visits aStarSvelte, check default appMenu values and run the a star algo', () => {
@@ -20,15 +22,19 @@ describe('Test A *', { browser: '!edge' }, () => {
     cy.get('@gridSize').should('have.value', '20') // this.gridSize would only work if not using arrow functions
     cy.get('@cellSize').should('have.value', '25')
     cy.get('@speed').should('have.value', '5')
+      .and(($speed) => { // same assertion, but mocha style and using the and() assertion
+        expect($speed.get(0).value).to.equal('5')
+      })
     // aliases are not kept through tests unless set in hooks, see before hook above
   })
 
   it('modifies appMenu inputs and checks that the algo gave a successful result', () => {
-    cy.get('input[name="speed"]') // type range, can not just .type()
+    cy.get('@speed') // type range, can not just .type()
       .invoke('val', 8)
       .trigger('input')
       .trigger('change'); 
 
+    // cy.pause()
     cy.contains('Start algo').click()
 
     cy.wait(1500) // algo runs
@@ -56,7 +62,6 @@ describe('Test A *', { browser: '!edge' }, () => {
     cy.contains('Start algo').click()
     cy.wait(1500) // algo runs but is not completed yet
     cy.get('.cell').should('not.assertSolved'); // custom chai assertion
-
     cy.wait(8000)
     cy.get('.cell').should('assertSolved');
   });

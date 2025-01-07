@@ -1,7 +1,7 @@
 
 describe('Generate dynamic tests', () => {
   beforeEach(() => {
-    cy.visit('localhost:5173')
+    cy.visit('/')
     cy.contains('Reset').click()
   })
 
