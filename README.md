@@ -1,4 +1,11 @@
-# Svelte + Vite
+# Astar algo made with Svelte
+
+based on my previous projects on aStar algo, sole purpose of this project is to learn and practice a bit with Svelte.
+Also added some tests and lots of comments for practice.
+
+`npm install`, then `npm run dev`
+
+## Svelte + Vite
 
 This template should help get you started developing with Svelte in Vite.
 
