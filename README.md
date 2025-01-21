@@ -5,6 +5,9 @@ Also added some tests and lots of comments for practice.
 
 `npm install`, then `npm run dev`
 
+## e2e testing with playwright
+`npx playwright test`, or `npx playwright test --ui` for visual testing
+
 ## Svelte + Vite
 
 This template should help get you started developing with Svelte in Vite.
