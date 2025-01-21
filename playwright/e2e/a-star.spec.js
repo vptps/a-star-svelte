@@ -3,7 +3,7 @@ import { test, expect } from '@playwright/test';
 import { drawImpossibleSmallLabyrinth } from '../commands/custom-command';
 
 test.beforeEach(async ({ page }) => {
-  await page.goto('http://localhost:5173');
+  await page.goto('/');
 });
 
 test('has buttons and form elements', async ({ page }) => {
@@ -12,6 +12,7 @@ test('has buttons and form elements', async ({ page }) => {
   await expect(page.getByText('Speed')).toBeVisible()
 });
 
+// like Cypress, we can run "only" a test, use "test.only('...', () => {})"
 test('Checks default values ', async ({ page }) => {
   // Check the default values for appMenu inputs
   const gridSize = await page.locator('[name="gridSize"]');
