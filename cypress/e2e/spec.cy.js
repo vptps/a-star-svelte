@@ -50,7 +50,7 @@ describe('Test A *', { browser: '!edge' }, () => {
 
   it('Create an impossible labyrinth with no solution', () => {
     cy.drawImpossibleSmallLabyrinth();
-    cy.contains('Start algo').click()
+    cy.contains('Start algo').click();
     cy.wait(1500) // algo runs
 
     cy.get('.cell').should('not.assertSolved');

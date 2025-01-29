@@ -8,7 +8,9 @@
     "cy:dev": "vite --host",
     "build": "vite build",
     "preview": "vite preview",
-    "cy:open": "cypress open"
+    "cy:open": "cypress open",
+    "pw:test": "playwright test",
+    "pw:open": "playwright test --ui"
   },
   "devDependencies": {
     "@playwright/test": "^1.49.1",
